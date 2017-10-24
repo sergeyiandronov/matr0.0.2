@@ -1,7 +1,51 @@
 #include <iostream>
 #include <sstream>
 using namespace std;
+struct mtrx{
+bool Succes=false;
+int Row;
+int Column;
+float **Matrix;
+};
+mtrx InitZero(int columns,int rows){
+mtrx result;
+float **matrix;
 
+     matrix = new float *[ rows];
+for(  int i = 0; i < rows; ++i ) {
+    matrix[ i ] = new float[ columns];
+for( int j = 0; j < columns; ++j ) {
+        matrix[ i ][ j ] = 0.0f;
+    }
+}
+result.Succes=true;result.Matrix=matrix;result.Column=columns;result.Row=rows;
+return result;
+	
+}
+mtrx sum(mtrx Mat1,mtrx Mat2){
+     mtrx result;
+     result=InitZero(Mat1.Column,Mat1.Row);
+     if((Mat1.Row==Mat2.Row)&&(Mat1.Column==Mat2.Column)){
+     	for(int j=0;j<Mat1.Row;j++){
+     		for(int i=0;i<Mat1.Column;i++){
+     			result.Matrix[j][i]=Mat1.Matrix[j][i]+Mat2.Matrix[j][i];
+     		}
+     	} 
+     }else{result.Succes=false;}
+     return result;
+}
+mtrx sub(mtrx Mat1,mtrx Mat2){
+     mtrx result;
+     result=InitZero(Mat1.Column,Mat1.Row);
+     if((Mat1.Row==Mat2.Row)&&(Mat1.Column==Mat2.Column)){
+     	for(int j=0;j<Mat1.Row;j++){
+     		for(int i=0;i<Mat1.Column;i++){
+     			result.Matrix[j][i]=Mat1.Matrix[j][i]-Mat2.Matrix[j][i];
+     		}
+     	} 
+     }else{result.Succes=false;}
+     return result;
+}
 bool getMatrix(float **matrix,int ncolumns,int nrows){
 
 
@@ -19,35 +63,71 @@ bool getMatrix(float **matrix,int ncolumns,int nrows){
 	
 }
 
-void coutMatrix(float **matrix,int ncolumns,int nrows){
-	for(int j=0;j<nrows;j++){
-	       for(int i=0;i<ncolumns;i++){
+void coutMatrix(mtrx Matsign){
+	for(int j=0;j<Matsign.Row;j++){
+	       for(int i=0;i<Matsign.Column;i++){
 	       	
-	       	cout<<matrix[j][i]<<" ";
+	       	cout<<Matsign.Matrix[j][i]<<" ";
 	       }cout<<"\n";
 	}
 }
-int main(){
-	 float **matrix;int columns=3;int rows=3;
-        string header;
+mtrx getfullMatrix(){
+mtrx result;
+float **matrix;
+string header;
+int rows;
+int columns;
         char razdel;
-       
-     
-        getline(cin,header);
+       getline(cin,header);
         istringstream str(header);
         if((str>>rows)&&(str>>razdel)&&(str>>columns)&&(razdel==',')){
-     float ** matrix = new float *[ rows ];
+     matrix = new float *[ rows];
 for(  int i = 0; i < rows; ++i ) {
-    matrix[ i ] = new float[ columns ];
-    for( int j = 0; j < columns; ++j ) {
+    matrix[ i ] = new float[ columns];
+for( int j = 0; j < columns; ++j ) {
         matrix[ i ][ j ] = 0.0f;
     }
-}cout<<"yer"<<rows;cout<<matrix[0][0]<<"\n";}
-	for(int j=0;j<rows;j++){
-	       for(int i=0;i<columns;i++){
-	       	
-	       	cout<<matrix[j][i]<<" ";
-	       }cout<<"\n";
-	}
+}result.Succes=getMatrix(matrix,columns,rows);result.Row=rows;result.Column=columns;result.Matrix=matrix;return result;}result.Succes=false;return result;}
+int main(){
+	mtrx Mat3sign;
+	 
+        mtrx Mat1sign;
+mtrx Mat2sign;
+string strop;
+char op;
+Mat1sign=getfullMatrix();
+getline(cin, strop);
+istringstream streamop(strop);
+streamop>>op;
+if(Mat1sign.Succes){switch(op){
+case 'T':
+    break;
+case 'R':
+    break;
+default:if((op!='+')&&(op!='-')&&(op!='*')){exit(0);}
+    break;
+}}
+Mat2sign=getfullMatrix(); 
+
+  if(Mat2sign.Succes){
+          switch(op){
+case '+':
+Mat3sign=sum(Mat1sign,Mat2sign);
+break;
+case '*':
+break;
+case '-':Mat3sign=sub(Mat1sign,Mat2sign);
+break;
+
+}
+
+
+}
+        
+if((Mat1sign.Succes)&&(Mat2sign.Succes)&&(Mat3sign.Succes)){
+	coutMatrix(Mat3sign);
+}
+
+
 
   }
