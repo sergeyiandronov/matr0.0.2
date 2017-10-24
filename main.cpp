@@ -46,6 +46,22 @@ mtrx sub(mtrx Mat1,mtrx Mat2){
      }else{result.Succes=false;}
      return result;
 }
+mtrx mul(mtrx Mat1,mtrx Mat2){
+     mtrx result;
+     result=InitZero(Mat2.Column,Mat1.Row);
+     if(Mat1.Column==Mat2.Row){
+     	for(int j=0;j<Mat1.Row;j++){
+     		for(int i=0;i<Mat2.Column;i++){
+     			float y=0;
+     			for(int z=0;z<Mat1.Column;z++){
+     			    y+=Mat1.Matrix[j][z]*Mat2.Matrix[z][i];	
+     			}
+     			result.Matrix[j][i]=y;
+     		}
+     	} 
+     }else{result.Succes=false;}
+     return result;
+}
 bool getMatrix(float **matrix,int ncolumns,int nrows){
 
 
@@ -114,7 +130,7 @@ Mat2sign=getfullMatrix();
 case '+':
 Mat3sign=sum(Mat1sign,Mat2sign);
 break;
-case '*':
+case '*':Mat3sign=mul(Mat1sign,Mat2sign);
 break;
 case '-':Mat3sign=sub(Mat1sign,Mat2sign);
 break;
