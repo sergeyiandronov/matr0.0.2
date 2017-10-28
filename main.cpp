@@ -1,114 +1,178 @@
 #include <iostream>
 #include <sstream>
 using namespace std;
-struct mtrx{
-bool Succes=false;
-int Row;
-int Column;
-float **Matrix;
-};
 
-mtrx InitZero(int columns,int rows){
-mtrx result;
-float **matrix;
 
-     matrix = new float *[ rows];
-for(  int i = 0; i < rows; ++i ) {
-    matrix[ i ] = new float[ columns];
-for( int j = 0; j < columns; ++j ) {
-        matrix[ i ][ j ] = 0.0f;
+void create_matrix(unsigned int columns,
+                   unsigned int rows,
+                   float **&matrix)
+{
+	matrix = new float *[ rows];
+    for( unsigned int i = 0; i < rows; ++i ) {
+        matrix[ i ] = new float[ columns];
+        for(unsigned int j = 0; j < columns; ++j ) {
+               matrix[ i ][ j ] = 0.0f;
+        }
     }
+    
 }
-result.Succes=true;result.Matrix=matrix;result.Column=columns;result.Row=rows;
-return result;
 	
-}
-float det(mtrx Mat){
+
+float det(unsigned int columns,
+          unsigned int rows,
+          float **matrix)
+{
+	if(columns!=rows)
+	{
+		return 0;
+	}
 	float result;
-            if(Mat.Column==Mat.Row){
-            	if(Mat.Column==1){result=Mat.Matrix[0][0];}
-		else if(Mat.Column==2){
-                            result=Mat.Matrix[0][0]*Mat.Matrix[1][1]-Mat.Matrix[0][1]*Mat.Matrix[1][0];			
-		}else{
-		
-		for(int j=0;j<Mat.Column;j++){
-			mtrx minor=InitZero(Mat.Row-1,Mat.Column-1);
-			
-			for(  int y = 0; y < Mat.Row-1; ++y ) {int k=0;
-                                          for( int x = 0; x < Mat.Column-1; ++x ) {
-                                          	if(x==j){k=1;}
-                                          	minor.Matrix[y][x]=Mat.Matrix[y+1][x+k];
-                                          }}
-                                    switch(j%2){
-                                    case 0:result+=Mat.Matrix[0][j]*det(minor); break;
-                                    case 1:result+=(-Mat.Matrix[0][j])*det(minor);break;
-                                    }      
+      
+    if(columns==1)
+    {
+    	result=matrix[0][0];
+    	
+    }
+	else if(columns==2)
+	{
+        result=matrix[0][0]*matrix[1][1]-matrix[0][1]*matrix[1][0];			
+	}
+	else
+	{
+		for(unsigned int j=0;j<columns;j++){
+			float **minor;
+			ctreate_matrix(columns-1,rows-1,minor);
+			for(unsigned int y = 0; y < Mat.Row-1; ++y )
+			{
+				int k=0;
+                for(unsigned int x = 0; x < columns-1; ++x ) 
+                {
+                    if(x==j){
+                    	k=1;
+                    }
+                    minor[y][x]=matrix[y+1][x+k];
+                }
+				
+			}
+            switch(j%2){
+                case 0:
+                   result+=matrix[0][j]*det(minor);
+                   break;
+                case 1:
+                   result+=(-matrix[0][j])*det(minor);
+                   break;
+            }      
                                   
 		}
-		}return result;}else{return 0;}
-	
+	}
+	return result;
 }
-mtrx AlgdopMatrix(mtrx Mat){
-	mtrx result;
-	result=InitZero(Mat.Column,Mat.Row);
-		for(int j=0;j<Mat.Row;j++){
-		for(int i=0;i<Mat.Column;i++){
-		mtrx minor=InitZero(Mat.Row-1,Mat.Column-1);
-			
+float **algedraic_matrix(unsigned int columns,
+                         unsigned int rows,
+                         float **matrix)
+{
+	float** result;
+	result=create_matrix(columns,rows);
+		for(unsigned int j=0;j<rows;j++){
+		    for(unsigned int i=0;i<columns;i++){
+		    minor=create_matrix(columns-1,rows-1);
 			int k1=0;
-			for(  int y = 0; y < Mat.Row-1; ++y ) {int k=0;
-                                          for( int x = 0; x < Mat.Column-1; ++x ) {
-                                          	if(x==i){k=1;}
-                                          	if(y==j){k1=1;}
-                                          	minor.Matrix[y][x]=Mat.Matrix[y+k1][x+k];
-                                          }}
-                                    switch((j+i)%2){
-                                    case 0:result.Matrix[j][i]=det(minor); break;
-                                    case 1:result.Matrix[j][i]=(-det(minor));break;
-                                    }      
-		}} return result;
+			for(unsigned int y = 0; y < rows-1; ++y ) 
+			{
+				int k=0;
+                for(unsigned int x = 0; x < columns-1; ++x )
+                {
+                    if(x==i)
+                    {
+                    	k=1;
+                    }
+                    if(y==j)
+                    {
+                    	k1=1;
+                    }
+                        
+                    matrix[y][x]=matrix[y+k1][x+k];
+                }
+			}
+            switch((j+i)%2){
+                case 0:
+                   result[j][i]=det(minor); 
+                   break;
+                case 1:
+                   result[j][i]=(-det(minor));
+                   break;
+            }      
+		}
+	}
+	return result;
+}
+float **sum(float **matrix1,
+            unsigned int columns1,
+            unsigned int rows1,
+            float **matrix2,
+            unsigned int columns2,
+            unsigned int rows2)
+{
+	float **result;
+	if(columns1!=columns2||rows1!=rows2)
+	{
+		stream.setstate(std::ios::failbit);
+		return result;
 		
-	
+	}
+	result=create_matrix(columns1,rows1);
+    for(unsigned int j=0;j<rows;j++){
+     	for(unsigned int i=0;i<columns;i++){
+     			result[j][i]=matrix1[j][i]+matrix2[j][i];
+     	}
+    } 
+    return result;
+   
 }
-mtrx sum(mtrx Mat1,mtrx Mat2){
-     mtrx result;
-     result=InitZero(Mat1.Column,Mat1.Row);
-     if((Mat1.Row==Mat2.Row)&&(Mat1.Column==Mat2.Column)){
-     	for(int j=0;j<Mat1.Row;j++){
-     		for(int i=0;i<Mat1.Column;i++){
-     			result.Matrix[j][i]=Mat1.Matrix[j][i]+Mat2.Matrix[j][i];
-     		}
-     	} 
-     }else{result.Succes=false;}
-     return result;
+float **sub(float **matrix1,
+            unsigned int columns1,
+            unsigned int rows1,
+            float **matrix2,
+            unsigned int columns2,
+            unsigned int rows2)
+{
+	float **result;
+	if(columns1!=columns2||rows1!=rows2)
+	{
+		stream.setstate(std::ios::failbit);
+		return result;
+		
+	}
+	result=create_matrix(columns1,rows1);
+    for(int j=0;j<rows;j++){
+     	for(int i=0;i<columns;i++){
+     			result[j][i]=matrix1[j][i]+matrix2[j][i];
+     	}
+    } 
+    return result;
+   
 }
-mtrx sub(mtrx Mat1,mtrx Mat2){
-     mtrx result;
-     result=InitZero(Mat1.Column,Mat1.Row);
-     if((Mat1.Row==Mat2.Row)&&(Mat1.Column==Mat2.Column)){
-     	for(int j=0;j<Mat1.Row;j++){
-     		for(int i=0;i<Mat1.Column;i++){
-     			result.Matrix[j][i]=Mat1.Matrix[j][i]-Mat2.Matrix[j][i];
-     		}
-     	} 
-     }else{result.Succes=false;}
-     return result;
-}
-mtrx mul(mtrx Mat1,mtrx Mat2){
-     mtrx result;
-     result=InitZero(Mat2.Column,Mat1.Row);
-     if(Mat1.Column==Mat2.Row){
-     	for(int j=0;j<Mat1.Row;j++){
-     		for(int i=0;i<Mat2.Column;i++){
+float **mul(float **matrix1,
+            unsigned int columns1,
+            unsigned int rows1,
+            float **matrix2,
+            unsigned int columns2,
+            unsigned int rows2)
+    
+for(int j=0;j<Mat1.Row;j++)
+{
+    for(int i=0;i<Mat2.Column;i++)
+    {
      			float y=0;
-     			for(int z=0;z<Mat1.Column;z++){
+     			for(int z=0;z<Mat1.Column;z++)
+     			{
      			    y+=Mat1.Matrix[j][z]*Mat2.Matrix[z][i];	
      			}
      			result.Matrix[j][i]=y;
-     		}
-     	} 
-     }else{result.Succes=false;}
-     return result;
+    }
+	
+} 
+    
 }
 mtrx Tr(mtrx Mat){
      mtrx result;
@@ -182,54 +246,6 @@ for( int j = 0; j < columns; ++j ) {
     }
 }result.Succes=getMatrix(matrix,columns,rows);result.Row=rows;result.Column=columns;result.Matrix=matrix;return result;}result.Succes=false;return result;}
 int main(){
-	mtrx Mat3sign;
-	 
-        mtrx Mat1sign;
-mtrx Mat2sign;
-string strop;
-char op;
-Mat1sign=getfullMatrix();
-getline(cin, strop);
-istringstream streamop(strop);
-streamop>>op;
-
-if(Mat1sign.Succes){switch(op){
-case 'T':
-    Mat3sign=Tr(Mat1sign);
-    
-    break;
-case 'R':
-    Mat3sign=R(Mat1sign);
-    if(!Mat3sign.Succes){cout<<"There is no such matrix";exit(0);}
-    break;
-default:if((op!='+')&&(op!='-')&&(op!='*')){cout<<"An error ocured while reading numbers";exit(0);}
-    break;
-}}else{cout<<"An error ocurred while reading numbers"; exit(0);}
-if(Mat3sign.Succes){
-	coutMatrix(Mat3sign);
-	exit(0);
-}
-Mat2sign=getfullMatrix(); 
-
-  if(Mat2sign.Succes){
-          switch(op){
-case '+':
-Mat3sign=sum(Mat1sign,Mat2sign);
-break;
-case '*':Mat3sign=mul(Mat1sign,Mat2sign);if(!Mat3sign.Succes){cout<<"Wrong matrixes"; exit(0);}
-break;
-case '-':Mat3sign=sub(Mat1sign,Mat2sign);
-break;
-}
-}else{cout<<"An error ocurred while reading numbers";exit(0);}
-
-
-
-        
-if((Mat1sign.Succes)&&(Mat2sign.Succes)&&(Mat3sign.Succes)){
-	coutMatrix(Mat3sign);
-}else{exit(0);}
-
 
 
   }
