@@ -67,9 +67,9 @@ float det(unsigned int columns,
 	}
 	return result;
 }
-float **algedraic_matrix(unsigned int columns,
-                         unsigned int rows,
-                         float **matrix)
+float **algedraic_matrix(float **matrix;
+	                     unsigned int columns,
+                         unsigned int rows)
 {
 	float** result;
 	result=create_matrix(columns,rows);
@@ -144,8 +144,8 @@ float **sub(float **matrix1,
 		
 	}
 	result=create_matrix(columns1,rows1);
-    for(int j=0;j<rows;j++){
-     	for(int i=0;i<columns;i++){
+    for(unsigned int j=0;j<rows;j++){
+     	for(unsigned int i=0;i<columns;i++){
      			result[j][i]=matrix1[j][i]+matrix2[j][i];
      	}
     } 
@@ -158,40 +158,55 @@ float **mul(float **matrix1,
             float **matrix2,
             unsigned int columns2,
             unsigned int rows2)
-    
-for(int j=0;j<Mat1.Row;j++)
 {
-    for(int i=0;i<Mat2.Column;i++)
+    float **result;
+    if(columns1!=rows2)
     {
-     			float y=0;
-     			for(int z=0;z<Mat1.Column;z++)
-     			{
-     			    y+=Mat1.Matrix[j][z]*Mat2.Matrix[z][i];	
-     			}
-     			result.Matrix[j][i]=y;
+	      stream.setstate(std::ios::failbit);
+	      return result;
     }
-	
-} 
-    
+    result=create_matrix(columns2,rows1);
+    for(unsigned int j=0;j<rows1;j++)
+    {
+          for(unsigned int i=0;i<columns2;i++)
+          {
+     			float y=0;
+     			for(unsigned int z=0;z<columns1;z++)
+     			{
+     			    y+=matrix1[j][z]*matrix2[z][i];	
+     			}
+     			result[j][i]=y;
+          }
+	} 
+    return result;    
 }
-mtrx Tr(mtrx Mat){
-     mtrx result;
-     result=InitZero(Mat.Row,Mat.Column);
+float **transplate(float **matrix,
+                   unsigned int columns,
+                   unsigned int rows)
+{
+     float **result;
+     result=create_matrix(rows,columns);
      
-     	for(int j=0;j<Mat.Column;j++){
-     		for(int i=0;i<Mat.Row;i++){
-     			result.Matrix[j][i]=Mat.Matrix[i][j];
+     	for(int j=0;j<columns;j++){
+     		for(int i=0;i<rows;i++){
+     			result[j][i]=matrix[i][j];
      		}
      	} 
      
      return result;
 }
-mtrx R(mtrx Mat){
-     mtrx result;
-     if (det(Mat)!=0){
-     result=InitZero(Mat.Row,Mat.Column);
-     mtrx A=AlgdopMatrix(Mat);
-     A=Tr(A);
+float **reverse(float **matrix,
+                unsigned int columns,
+                unsigned int rows)
+     float **result;
+     if (det(matrix)==0)
+     {
+     	stream.setstate(std::ios::failbit);
+     	return result;
+     }	
+     result=create_matrix(columns,rows);
+     float **a=algebraic_matrix(matrix,columns,rows);
+     a=transplate(a);
      
      	for(int j=0;j<Mat.Column;j++){
      		for(int i=0;i<Mat.Row;i++){
