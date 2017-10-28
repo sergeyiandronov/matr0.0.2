@@ -3,24 +3,24 @@
 using namespace std;
 
 
-void create_matrix(unsigned int columns,
-                   unsigned int rows,
-                   float **&matrix)
+float **create_matrix(unsigned int columns,
+                   unsigned int rows)
 {
-	matrix = new float *[ rows];
+    float **matrix;	
+    matrix = new float *[ rows];
     for( unsigned int i = 0; i < rows; ++i ) {
         matrix[ i ] = new float[ columns];
         for(unsigned int j = 0; j < columns; ++j ) {
                matrix[ i ][ j ] = 0.0f;
         }
     }
-    
+    return matrix;
 }
 	
 
-float det(unsigned int columns,
-          unsigned int rows,
-          float **matrix)
+float det(float **matrix,
+          unsigned int columns,
+          unsigned int rows)
 {
 	if(columns!=rows)
 	{
@@ -41,8 +41,8 @@ float det(unsigned int columns,
 	{
 		for(unsigned int j=0;j<columns;j++){
 			float **minor;
-			ctreate_matrix(columns-1,rows-1,minor);
-			for(unsigned int y = 0; y < Mat.Row-1; ++y )
+			minor=create_matrix(columns-1,rows-1);
+			for(unsigned int y = 0; y < rows-1; ++y )
 			{
 				int k=0;
                 for(unsigned int x = 0; x < columns-1; ++x ) 
@@ -56,10 +56,10 @@ float det(unsigned int columns,
 			}
             switch(j%2){
                 case 0:
-                   result+=matrix[0][j]*det(minor);
+                   result+=matrix[0][j]*det(minor,columns-1,rows-1);
                    break;
                 case 1:
-                   result+=(-matrix[0][j])*det(minor);
+                   result+=(-matrix[0][j])*det(minor,columns-1,rows-1);
                    break;
             }      
                                   
@@ -67,7 +67,7 @@ float det(unsigned int columns,
 	}
 	return result;
 }
-float **algedraic_matrix(float **matrix;
+float **algedraic_matrix(float **matrix,
 	                     unsigned int columns,
                          unsigned int rows)
 {
@@ -75,6 +75,7 @@ float **algedraic_matrix(float **matrix;
 	result=create_matrix(columns,rows);
 		for(unsigned int j=0;j<rows;j++){
 		    for(unsigned int i=0;i<columns;i++){
+		    float ** minor;
 		    minor=create_matrix(columns-1,rows-1);
 			int k1=0;
 			for(unsigned int y = 0; y < rows-1; ++y ) 
@@ -96,10 +97,10 @@ float **algedraic_matrix(float **matrix;
 			}
             switch((j+i)%2){
                 case 0:
-                   result[j][i]=det(minor); 
+                   result[j][i]=det(minor,columns-1,rows-1); 
                    break;
                 case 1:
-                   result[j][i]=(-det(minor));
+                   result[j][i]=(-det(minor,columns-1,rows-1));
                    break;
             }      
 		}
@@ -116,7 +117,7 @@ float **sum(float **matrix1,
 	float **result;
 	if(columns1!=columns2||rows1!=rows2)
 	{
-		stream.setstate(std::ios::failbit);
+	
 		return result;
 		
 	}
@@ -139,7 +140,7 @@ float **sub(float **matrix1,
 	float **result;
 	if(columns1!=columns2||rows1!=rows2)
 	{
-		stream.setstate(std::ios::failbit);
+	
 		return result;
 		
 	}
@@ -162,7 +163,7 @@ float **mul(float **matrix1,
     float **result;
     if(columns1!=rows2)
     {
-	      stream.setstate(std::ios::failbit);
+	      
 	      return result;
     }
     result=create_matrix(columns2,rows1);
@@ -251,7 +252,7 @@ void cout_matrix(float **matrix,
 	{
 	       for(unsigned int i=0;i<ncolumns;i++)
 	       {
-	       	   if(Matsign.Matrix[j][i]==-0)
+	       	   if(matrix[j][i]==-0)
 	       	   {
 	       		matrix[j][i]=0;
 	       	   }  
