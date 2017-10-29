@@ -23,6 +23,9 @@ float det(float** matrix,
     if (columns != rows) {
         return 0;
     }
+    if(columns==rows&&rows==1){
+    	return 0;
+    }
     float result;
 
     if (columns == 1) {
