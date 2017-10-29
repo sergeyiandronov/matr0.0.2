@@ -23,9 +23,7 @@ float det(float** matrix,
     if (columns != rows) {
         return 0;
     }
-    if(columns==rows&&rows==1){
-    	return 0;
-    }
+  
     float result;
 
     if (columns == 1) {
@@ -201,6 +199,10 @@ float** reverse(float** matrix,
         result = nullptr;
         return result;
     }
+    if(columns==rows&&rows==1){
+        result=nullptr;
+        return result;
+    }    
     result = create_matrix(columns, rows);
     float** a = algebraic_matrix(matrix, columns, rows);
     a = transplate(a, columns, rows, newcolumns, newrows);
