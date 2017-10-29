@@ -4,7 +4,7 @@ using namespace std;
 
 
 float **create_matrix(unsigned int columns,
-                   unsigned int rows)
+                      unsigned int rows)
 {
     float **matrix;	
     matrix = new float *[ rows];
@@ -67,7 +67,7 @@ float det(float **matrix,
 	}
 	return result;
 }
-float **algedraic_matrix(float **matrix,
+float **algebraic_matrix(float **matrix,
 	                     unsigned int columns,
                          unsigned int rows)
 {
@@ -122,8 +122,8 @@ float **sum(float **matrix1,
 		
 	}
 	result=create_matrix(columns1,rows1);
-    for(unsigned int j=0;j<rows;j++){
-     	for(unsigned int i=0;i<columns;i++){
+    for(unsigned int j=0;j<rows1;j++){
+     	for(unsigned int i=0;i<columns1;i++){
      			result[j][i]=matrix1[j][i]+matrix2[j][i];
      	}
     } 
@@ -145,8 +145,8 @@ float **sub(float **matrix1,
 		
 	}
 	result=create_matrix(columns1,rows1);
-    for(unsigned int j=0;j<rows;j++){
-     	for(unsigned int i=0;i<columns;i++){
+    for(unsigned int j=0;j<rows1;j++){
+     	for(unsigned int i=0;i<columns1;i++){
      			result[j][i]=matrix1[j][i]+matrix2[j][i];
      	}
     } 
@@ -201,20 +201,21 @@ float **transplate(float **matrix,
 float **reverse(float **matrix,
                 unsigned int columns,
                 unsigned int rows)
+{
      float **result;
-     if (det(matrix)==0)
+     if (det(matrix,columns,rows)==0)
      {
-     	stream.setstate(std::ios::failbit);
+     	
      	return result;
      }	
      result=create_matrix(columns,rows);
      float **a=algebraic_matrix(matrix,columns,rows);
-     a=transplate(a);
+     a=transplate(a,columns,rows);
      for(unsigned int j=0;j<columns;j++)
      {
-     		    for(unsigned int i=0;i<row;i++)
+     		    for(unsigned int i=0;i<rows;i++)
      		    {
-     			    result[j][i]=a[j][i]*(1/(det(matrix)));
+     			    result[j][i]=a[j][i]*(1/(det(matrix,columns,rows)));
      		    }
      } 
      
@@ -224,7 +225,7 @@ bool get_matrix(float **&matrix,
                unsigned int ncolumns,
                unsigned int nrows)
 {
-
+  matrix=create_matrix(ncolumns,nrows);
 
    for(unsigned int j=0;j<nrows;j++)
    {
@@ -262,21 +263,23 @@ void cout_matrix(float **matrix,
 	}
 }
 bool get_size(unsigned int &columns,
-              unsigned int &rows)
+              unsigned int  &rows)
 {
      string header;
 
      char razdel;
      getline(cin,header);
      istringstream str(header);
-     if((str>>*rows)&&(str>>razdel)&&(str>>*columns)&&(razdel==','))
+     if((str>>rows)&&(str>>razdel)&&(str>>columns)&&(razdel==','))
      {
      	return true;
      }
      return false;
 }
 int main()
-{
-int a,b
-
+{float **matrix1;
+unsigned int columns,rows;
+bool c=get_size(rows,columns);
+get_matrix(matrix1,columns,rows);
+cout_matrix(matrix1,columns,rows);
 }
