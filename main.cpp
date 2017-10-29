@@ -284,7 +284,7 @@ int main()
                 break;
             default:
                 if (op != '+' && op != '-' && op != '*') {
-                    cout << "An error was occured while reading numbers from line.";
+                    cout << "An error has occured while reading numbers from line.";
                     exit(0);
                 }
                 break;
@@ -299,12 +299,12 @@ int main()
             }
         }
         else {
-            cout << "An error was occured while reading numbers from line.";
+            cout << "An error has occured while reading numbers from line.";
             exit(0);
         }
     }
     else {
-        cout << "An error was occured while reading numbers from line.";
+        cout << "An error has occured while reading numbers from line.";
         exit(0);
     }
     if (get_size(columns2, rows2) && get_matrix(matrix2, columns2, rows2)) {
@@ -328,7 +328,7 @@ int main()
         }
     }
     else {
-        cout << "An error was occured while reading numbers from line.";
+        cout << "An error has occured while reading numbers from line.";
         exit(0);
     }
 }
