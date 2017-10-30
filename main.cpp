@@ -262,6 +262,14 @@ bool get_size(unsigned int& columns,
     }
     return false;
 }
+void destroy( float ** elements,
+              unsigned int rows )
+{
+    for( unsigned int i = 0; i < rows; ++i ) {
+        delete [] elements[ i ];
+    }
+    delete [] elements; 
+}
 int main()
 {
     float** matrix1;
@@ -331,4 +339,7 @@ int main()
         cout << "An error has occured while reading input data.";
         exit(0);
     }
+    destroy(matrix1,rows);
+    destroy(matrix2,rows2);
+    destroy(matrix3,rows3);
 }
