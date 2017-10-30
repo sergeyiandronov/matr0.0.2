@@ -196,6 +196,7 @@ float** reverse(float** matrix,
 {
     float** result;
     if (det(matrix, columns, rows) == 0) {
+        
         result = nullptr;
         return result;
     }
@@ -227,6 +228,7 @@ bool get_matrix(float**& matrix,
         istringstream stream(new_row);
         for (unsigned int i = 0; i < ncolumns; i++) {
             if (!(stream >> matrix[j][i])) {
+                destroy(matrix,nrows);
                 return false;
             }
         }
@@ -299,10 +301,14 @@ int main()
             }
             if (matrix3 != nullptr && (op == 'T' || op == 'R')) {
                 cout_matrix(matrix3, columns3, rows3);
+                destroy(matrix3,rows3);
+                destroy(matrix1,rows1);
                 exit(0);
             }
             else if (matrix3 == nullptr) {
                 cout << "There is no reverse matrix.";
+                
+                destroy(matrix1,rows1);
                 exit(0);
             }
         }
@@ -329,9 +335,15 @@ int main()
         }
         if (matrix3 != nullptr) {
             cout_matrix(matrix3, columns3, rows3);
+            destroy(matrix3,rows3);
+            destroy(matrix1,rows1);
+            destroy(matrix2,rows2);
         }
         else if (matrix3 == nullptr) {
             cout << "Wrong matrixes";
+            
+            destroy(matrix2,rows2);
+            destroy(matrix1,rows1);
             exit(0);
         }
     }
@@ -339,7 +351,5 @@ int main()
         cout << "An error has occured while reading input data.";
         exit(0);
     }
-    destroy(matrix1,rows);
-    destroy(matrix2,rows2);
-    destroy(matrix3,rows3);
+    
 }
