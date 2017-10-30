@@ -1,9 +1,17 @@
 #include <iostream>
 #include <sstream>
 using namespace std;
+void destroy( float ** elements,
+              unsigned int rows )
+{
+    for( unsigned int i = 0; i < rows; ++i ) {
+        delete [] elements[ i ];
+    }
+    delete [] elements;
+}
 
 float** create_matrix(unsigned int columns,
-    unsigned int rows)
+                      unsigned int rows)
 {
     float** matrix;
     matrix = new float*[rows];
@@ -17,13 +25,13 @@ float** create_matrix(unsigned int columns,
 }
 
 float det(float** matrix,
-    unsigned int columns,
-    unsigned int rows)
+          unsigned int columns,
+          unsigned int rows)
 {
     if (columns != rows) {
         return 0;
     }
-  
+
     float result;
 
     if (columns == 1) {
@@ -46,20 +54,20 @@ float det(float** matrix,
                 }
             }
             switch (j % 2) {
-            case 0:
-                result += matrix[0][j] * det(minor, columns - 1, rows - 1);
-                break;
-            case 1:
-                result += (-matrix[0][j]) * det(minor, columns - 1, rows - 1);
-                break;
+                case 0:
+                    result += matrix[0][j] * det(minor, columns - 1, rows - 1);
+                    break;
+                case 1:
+                    result += (-matrix[0][j]) * det(minor, columns - 1, rows - 1);
+                    break;
             }
         }
     }
     return result;
 }
 float** algebraic_matrix(float** matrix,
-    unsigned int columns,
-    unsigned int rows)
+                         unsigned int columns,
+                         unsigned int rows)
 {
     float** result;
     result = create_matrix(columns, rows);
@@ -82,25 +90,25 @@ float** algebraic_matrix(float** matrix,
                 }
             }
             switch ((j + i) % 2) {
-            case 0:
-                result[j][i] = det(minor, columns - 1, rows - 1);
-                break;
-            case 1:
-                result[j][i] = (-det(minor, columns - 1, rows - 1));
-                break;
+                case 0:
+                    result[j][i] = det(minor, columns - 1, rows - 1);
+                    break;
+                case 1:
+                    result[j][i] = (-det(minor, columns - 1, rows - 1));
+                    break;
             }
         }
     }
     return result;
 }
 float** sum(float** matrix1,
-    unsigned int columns1,
-    unsigned int rows1,
-    float** matrix2,
-    unsigned int columns2,
-    unsigned int rows2,
-    unsigned int& newcolumns,
-    unsigned int& newrows)
+            unsigned int columns1,
+            unsigned int rows1,
+            float** matrix2,
+            unsigned int columns2,
+            unsigned int rows2,
+            unsigned int& newcolumns,
+            unsigned int& newrows)
 {
     float** result;
     if (columns1 != columns2 || rows1 != rows2) {
@@ -118,13 +126,13 @@ float** sum(float** matrix1,
     return result;
 }
 float** sub(float** matrix1,
-    unsigned int columns1,
-    unsigned int rows1,
-    float** matrix2,
-    unsigned int columns2,
-    unsigned int rows2,
-    unsigned int& newcolumns,
-    unsigned int& newrows)
+            unsigned int columns1,
+            unsigned int rows1,
+            float** matrix2,
+            unsigned int columns2,
+            unsigned int rows2,
+            unsigned int& newcolumns,
+            unsigned int& newrows)
 {
     float** result;
     if (columns1 != columns2 || rows1 != rows2) {
@@ -143,13 +151,13 @@ float** sub(float** matrix1,
     return result;
 }
 float** mul(float** matrix1,
-    unsigned int columns1,
-    unsigned int rows1,
-    float** matrix2,
-    unsigned int columns2,
-    unsigned int rows2,
-    unsigned int& newcolumns,
-    unsigned int& newrows)
+            unsigned int columns1,
+            unsigned int rows1,
+            float** matrix2,
+            unsigned int columns2,
+            unsigned int rows2,
+            unsigned int& newcolumns,
+            unsigned int& newrows)
 {
     float** result;
     if (columns1 != rows2) {
@@ -171,10 +179,10 @@ float** mul(float** matrix1,
     return result;
 }
 float** transplate(float** matrix,
-    unsigned int columns,
-    unsigned int rows,
-    unsigned int& newcolumns,
-    unsigned int& newrows)
+                   unsigned int columns,
+                   unsigned int rows,
+                   unsigned int& newcolumns,
+                   unsigned int& newrows)
 {
     float** result;
     result = create_matrix(rows, columns);
@@ -189,27 +197,29 @@ float** transplate(float** matrix,
     return result;
 }
 float** reverse(float** matrix,
-    unsigned int columns,
-    unsigned int rows,
-    unsigned int& newcolumns,
-    unsigned int& newrows)
+                unsigned int columns,
+                unsigned int rows,
+                unsigned int& newcolumns,
+                unsigned int& newrows)
 {
     float** result;
     if (det(matrix, columns, rows) == 0) {
-        
+
         result = nullptr;
         return result;
     }
     if(columns==rows&&rows==1){
         result=nullptr;
         return result;
-    }    
+    }
     result = create_matrix(columns, rows);
     float** a = algebraic_matrix(matrix, columns, rows);
+
     a = transplate(a, columns, rows, newcolumns, newrows);
-    for (unsigned int j = 0; j < columns; j++) {
-        for (unsigned int i = 0; i < rows; i++) {
-            result[j][i] = a[j][i] * (1 / (det(matrix, columns, rows)));
+    float d=det(matrix,columns,rows);
+    for (unsigned int j = 0; j < rows; j++) {
+        for (unsigned int i = 0; i < columns; i++) {
+            result[j][i] = a[j][i] / d;
         }
     }
     newcolumns = columns;
@@ -217,8 +227,8 @@ float** reverse(float** matrix,
     return result;
 }
 bool get_matrix(float**& matrix,
-    unsigned int ncolumns,
-    unsigned int nrows)
+                unsigned int ncolumns,
+                unsigned int nrows)
 {
     matrix = create_matrix(ncolumns, nrows);
 
@@ -237,8 +247,8 @@ bool get_matrix(float**& matrix,
 }
 
 void cout_matrix(float** matrix,
-    unsigned int ncolumns,
-    unsigned int nrows)
+                 unsigned int ncolumns,
+                 unsigned int nrows)
 {
 
     for (unsigned int j = 0; j < nrows; j++) {
@@ -252,7 +262,7 @@ void cout_matrix(float** matrix,
     }
 }
 bool get_size(unsigned int& columns,
-    unsigned int& rows)
+              unsigned int& rows)
 {
     string header;
 
@@ -263,14 +273,6 @@ bool get_size(unsigned int& columns,
         return true;
     }
     return false;
-}
-void destroy( float ** elements,
-              unsigned int rows )
-{
-    for( unsigned int i = 0; i < rows; ++i ) {
-        delete [] elements[ i ];
-    }
-    delete [] elements; 
 }
 int main()
 {
@@ -286,28 +288,29 @@ int main()
         istringstream stream(com);
         if (stream >> op) {
             switch (op) {
-            case 'T':
-                matrix3 = transplate(matrix1, columns1, rows1, columns3, rows3);
-                break;
-            case 'R':
-                matrix3 = reverse(matrix1, columns1, rows1, columns3, rows3);
-                break;
-            default:
-                if (op != '+' && op != '-' && op != '*') {
-                    cout << "An error has occured while reading input data.";
-                    exit(0);
-                }
-                break;
+                case 'T':
+                    matrix3 = transplate(matrix1, columns1, rows1, columns3, rows3);
+                    break;
+                case 'R':
+                    matrix3 = reverse(matrix1, columns1, rows1, columns3, rows3);
+                    break;
+                default:
+                    if (op != '+' && op != '-' && op != '*') {
+                        cout << "An error has occured while reading input data.";
+                        exit(0);
+                    }
+                    break;
             }
             if (matrix3 != nullptr && (op == 'T' || op == 'R')) {
                 cout_matrix(matrix3, columns3, rows3);
+             
                 destroy(matrix3,rows3);
                 destroy(matrix1,rows1);
                 exit(0);
             }
             else if (matrix3 == nullptr) {
                 cout << "There is no reverse matrix.";
-                
+
                 destroy(matrix1,rows1);
                 exit(0);
             }
@@ -323,15 +326,15 @@ int main()
     }
     if (get_size(columns2, rows2) && get_matrix(matrix2, columns2, rows2)) {
         switch (op) {
-        case '+':
-            matrix3 = sum(matrix1, columns1, rows1, matrix2, columns2, rows2, columns3, rows3);
-            break;
-        case '-':
-            matrix3 = sub(matrix1, columns1, rows1, matrix2, columns2, rows2, columns3, rows3);
-            break;
-        case '*':
-            matrix3 = mul(matrix1, columns1, rows1, matrix2, columns2, rows2, columns3, rows3);
-            break;
+            case '+':
+                matrix3 = sum(matrix1, columns1, rows1, matrix2, columns2, rows2, columns3, rows3);
+                break;
+            case '-':
+                matrix3 = sub(matrix1, columns1, rows1, matrix2, columns2, rows2, columns3, rows3);
+                break;
+            case '*':
+                matrix3 = mul(matrix1, columns1, rows1, matrix2, columns2, rows2, columns3, rows3);
+                break;
         }
         if (matrix3 != nullptr) {
             cout_matrix(matrix3, columns3, rows3);
@@ -341,7 +344,7 @@ int main()
         }
         else if (matrix3 == nullptr) {
             cout << "Wrong matrixes";
-            
+
             destroy(matrix2,rows2);
             destroy(matrix1,rows1);
             exit(0);
@@ -351,5 +354,5 @@ int main()
         cout << "An error has occured while reading input data.";
         exit(0);
     }
-    
+
 }
